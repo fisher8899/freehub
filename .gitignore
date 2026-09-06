@@ -1,0 +1,5 @@
+node_modules/
+data/freehub.db
+data/freehub.db-shm
+data/freehub.db-wal
+dist/

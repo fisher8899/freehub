@@ -1,0 +1,31 @@
+{
+  "port": 8619,
+  "crawlIntervalHours": 6,
+  "defaultWindowDays": 14,
+  "newDays": 7,
+  "sources": [
+    {
+      "id": "freeegg",
+      "type": "freeegg",
+      "name": "FreeEgg 赛博鸡蛋（主源）",
+      "url": "https://freeegg.top/data/eggs.json",
+      "enabled": true,
+      "lastRun": "2026-09-06T03:00:23.297Z",
+      "lastStatus": "ok · 28 条 · 623ms"
+    },
+    {
+      "id": "github-free-llm",
+      "type": "github",
+      "name": "GitHub 免费 LLM 清单",
+      "url": "https://raw.githubusercontent.com/jtig37/free-llm-api-resources/main/README.md",
+      "enabled": false
+    },
+    {
+      "id": "rss-slot-1",
+      "type": "rss",
+      "name": "微信公众号 RSS（示例槽位，请替换为你的 feed）",
+      "url": "",
+      "enabled": false
+    }
+  ]
+}
