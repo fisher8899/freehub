@@ -1,0 +1,45 @@
+{
+  "project": "water-audit",
+  "updated": "2026-09-10",
+  "references": [
+    {
+      "id": "behavioral-fingerprints",
+      "file": "behavioral-fingerprints.json",
+      "kind": "行为指纹参考(单 token 回答分布, 11 个模型 × 15 格)",
+      "protocol": "bruckner-zenodo-2026(与本工具 one-token/v1 探针协议同源:同系统提示词、同改写池、同归一化)",
+      "license": "CC-BY-4.0",
+      "source": {
+        "paper": "One Token Is Enough: 单 token 输出分布作为大模型行为指纹 (arXiv:2607.10252)",
+        "author": "Tomáš Bruckner(布拉格经济与商业大学)",
+        "dataset": "Zenodo DOI 10.5281/zenodo.21278557",
+        "derived": "llm-fingerprint-detector 的 sample 参考文件(计数由论文公开分布概率×n_valid 重构),采集渠道 OpenRouter,采集日期 2026-07-08",
+        "url": "https://github.com/ToseaAI/llm-fingerprint-detector"
+      },
+      "caveat": "参考计数为论文分布的重构值且来自 OpenRouter 渠道,与自采集参考相比精度略低;结论标注为「指示性」。跨渠道/跨时间模型更新会造成合法漂移,不确定时请用 --enroll 自采参考做同协议严格比对。"
+    },
+    {
+      "id": "tokenizer-counts",
+      "file": "tokenizer-counts.json",
+      "kind": "分词器指纹参考(36 个规范字符串的精确 token 计数)",
+      "tokenizers": "o200k_base / cl100k_base / p50k_base / r50k_base / llama3 / llama4",
+      "license": "词表版权归各自权利人(OpenAI / Meta);计数文件仅含 36 个短字符串的 token 数量,事实性数据",
+      "source": {
+        "openai": "正则取自本机 tiktoken 包 tiktoken_ext/openai_public.py 官方原文;词表文件取自 npm gpt-tokenizer(与 openaipublic CDN 同源)",
+        "llama": "PyPI llama-models 内置的 Meta 官方 llama3/llama4 tokenizer.model"
+      },
+      "caveat": "qwen / deepseek / glm / gemma 等词表未包含(生成环境无法访问其官方词表),可用 scripts/gen_tokenizer_refs_extra.py 在可访问 HuggingFace 的环境补充;缺失时不影响其他分词器的判定。"
+    },
+    {
+      "id": "canonical-strings",
+      "file": "canonical-strings.json",
+      "kind": "分词器指纹规范字符串(36 条,一经发布冻结)",
+      "license": "MIT(本项目)"
+    },
+    {
+      "id": "models",
+      "file": "models.json",
+      "kind": "声称模型元数据(官方上下文长度 / 知识截止 / 公开基准分数带)",
+      "license": "事实性数据,逐条注明来源与截止日期;无可靠公开数据的字段一律置 null,不做估计"
+    }
+  ]
+}

@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>water-audit · 模型注水检测控制台</title>
+<style>
+:root{--ink:#1a202c;--sub:#5a6472;--line:#e3e7ee;--bg:#f6f8fb;--card:#fff;--accent:#2b6cb0;--code:#f0f3f8;
+--ok:#0a7a3d;--okbg:#e6f7ed;--warn:#9a6b00;--warnbg:#fff6e0;--bad:#b42318;--badbg:#fde8e8;--gray:#71717a;--graybg:#eef1f6;--blue:#1d4ed8;--bluebg:#e3ecfd}
+*{box-sizing:border-box}
+body{margin:0;font:14.5px/1.65 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 16px 90px}
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+h1{font-size:21px;margin:0}
+header .sub{color:var(--sub);font-size:12.5px}
+.spacer{flex:1}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 14px;transition:.15s}
+button:hover{border-color:#b9c4d4}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+button.primary:hover{filter:brightness(1.08)}
+button.danger{color:var(--bad)}
+button.ghost{border-color:transparent;background:transparent;color:var(--accent)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:18px}
+.card h2{font-size:15.5px;margin:0 0 12px;display:flex;align-items:center;gap:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px 16px}
+label{display:block;font-size:12.5px;color:var(--sub);margin-bottom:4px;font-weight:600}
+input[type=text],input[type=password],input[type=url],select,textarea{width:100%;font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:2px solid #bcd3f0;border-color:#7fa8d9}
+.hint{font-size:11.5px;color:#98a2b3;margin-top:3px}
+.suites{display:flex;flex-wrap:wrap;gap:8px 14px}
+.suites label{display:flex;align-items:center;gap:5px;font-weight:400;color:var(--ink);font-size:13.5px;margin:0}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
+.pill{display:inline-block;padding:1px 10px;border-radius:20px;font-size:12px;font-weight:600;white-space:nowrap}
+.pill.ok{background:var(--okbg);color:var(--ok)} .pill.warn{background:var(--warnbg);color:var(--warn)}
+.pill.bad{background:var(--badbg);color:var(--bad)} .pill.gray{background:var(--graybg);color:var(--gray)}
+.pill.blue{background:var(--bluebg);color:var(--blue)}
+.pill.pulse{animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.45}}
+table{border-collapse:collapse;width:100%}
+th,td{border-bottom:1px solid var(--line);padding:9px 10px;text-align:left;font-size:13.5px;vertical-align:middle}
+th{color:var(--sub);font-weight:600;font-size:12.5px;background:var(--code)}
+td .host{color:var(--sub);font-size:12px}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px}
+.progress{height:6px;background:var(--graybg);border-radius:4px;overflow:hidden;min-width:90px}
+.progress i{display:block;height:100%;background:var(--blue);animation:slide 1.4s linear infinite;width:40%}
+@keyframes slide{from{transform:translateX(-100%)}to{transform:translateX(250%)}}
+.log{background:#0f172a;color:#d7e2ee;border-radius:10px;padding:12px 14px;font:12px/1.6 ui-monospace,Menlo,Consolas,monospace;max-height:320px;overflow:auto;white-space:pre-wrap;word-break:break-all}
+.suite-pills{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.toast{position:fixed;right:18px;bottom:18px;background:#111827;color:#fff;padding:12px 18px;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.25);font-size:13.5px;max-width:420px;z-index:99;display:none}
+.toast.show{display:block;animation:up .25s ease}
+@keyframes up{from{transform:translateY(14px);opacity:0}}
+.empty{color:#98a2b3;text-align:center;padding:26px 0;font-size:13px}
+details summary{cursor:pointer;color:var(--accent);font-size:13px;margin:6px 0}
+.verdict-band{border-left:4px solid var(--gray);background:var(--graybg);border-radius:0 10px 10px 0;padding:10px 14px;margin:10px 0;font-size:13.5px}
+.verdict-band.ok{border-color:var(--ok);background:var(--okbg)} .verdict-band.warn{border-color:var(--warn);background:var(--warnbg)} .verdict-band.bad{border-color:var(--bad);background:var(--badbg)}
+a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+.kbd{background:var(--code);border:1px solid var(--line);border-radius:4px;padding:0 5px;font-size:11.5px}
+footer{color:#98a2b3;font-size:12px;text-align:center;margin-top:30px}
+.switch{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--sub)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🌊 water-audit 控制台</h1>
+    <span class="sub" id="meta-line">加载中…</span>
+    <div class="spacer"></div>
+    <label class="switch" title="任务完成时弹系统通知"><input type="checkbox" id="notify-switch"> 完成后提醒我</label>
+    <label class="switch" title="任务完成时播放提示音"><input type="checkbox" id="beep-switch"> 提示音</label>
+  </header>
+
+  <!-- 新建审计 -->
+  <div class="card">
+    <h2>① 新建检测任务</h2>
+    <div class="grid">
+      <div>
+        <label>Base URL(OpenAI 兼容根地址,含 /v1)</label>
+        <input type="url" id="f-baseurl" placeholder="https://api.example.com/v1" required>
+      </div>
+      <div>
+        <label>API Key</label>
+        <input type="password" id="f-apikey" placeholder="sk-…(留空则不带鉴权头)" autocomplete="off">
+        <div class="hint">Key 仅保存在服务器内存,不写入磁盘、日志与报告</div>
+      </div>
+      <div>
+        <label>模型 ID(声称的模型)</label>
+        <input type="text" id="f-model" placeholder="gpt-4o / deepseek-chat / claude-sonnet-4-5 …" required>
+      </div>
+      <div>
+        <label>预算档位</label>
+        <select id="f-budget">
+          <option value="quick">quick · 快速体检(~150 请求)</option>
+          <option value="standard" selected>standard · 日常审计(~350 请求)</option>
+          <option value="deep">deep · 取证实锤(~900 请求)</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <label>探针维度(默认全选)</label>
+      <div class="suites" id="f-suites"></div>
+    </div>
+    <details>
+      <summary>高级选项(备注 / 参考指纹 / Webhook)</summary>
+      <div class="grid" style="margin-top:8px">
+        <div>
+          <label>备注(可选)</label>
+          <input type="text" id="f-label" placeholder="例如: 某宝 9.9 元 key">
+        </div>
+        <div>
+          <label>完成后 Webhook(可选)</label>
+          <input type="url" id="f-webhook" placeholder="https://…  完成时 POST 结果 JSON">
+        </div>
+      </div>
+      <div style="margin-top:10px">
+        <label>参考指纹 JSON(可选,enroll 产出的自采参考,同协议严格比对)</label>
+        <textarea id="f-refjson" rows="4" placeholder='{"formatVersion":1,"protocol":"one-token/v1","model":"gpt-4o","cells":{…}}'></textarea>
+      </div>
+      <div class="suites" style="margin-top:8px">
+        <label><input type="checkbox" id="f-noexec"> 不在服务器上执行模型生成的代码(代码题跳过)</label>
+      </div>
+    </details>
+    <div class="row">
+      <button class="primary" id="btn-submit">🚀 开始检测</button>
+      <span class="hint" id="submit-hint"></span>
+    </div>
+  </div>
+
+  <!-- 任务列表 -->
+  <div class="card">
+    <h2>② 任务队列 <span class="pill gray" id="queue-stat"></span></h2>
+    <div id="jobs-box"></div>
+  </div>
+
+  <!-- 报告库 -->
+  <div class="card">
+    <h2>③ 报告库</h2>
+    <div id="reports-box"></div>
+  </div>
+
+  <footer>
+    water-audit · 行为指纹方法 arXiv:2607.10252 · 判定均为统计证据,非绝对证明 ·
+    报告落盘于 <span class="kbd">water-audit/reports/</span> · API Key 不落盘
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict'
+const $ = (s) => document.querySelector(s)
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
+const STATUS = {
+  queued:{t:'排队中',c:'gray'}, running:{t:'运行中',c:'blue pulse'}, done:{t:'已完成',c:'ok'},
+  failed:{t:'失败',c:'bad'}, canceled:{t:'已取消',c:'gray'}, interrupted:{t:'已中断',c:'warn'},
+}
+const VSTATUS = {
+  consistent:{t:'未发现注水证据',c:'ok',icon:'✅'}, suspicious:{t:'发现可疑信号',c:'warn',icon:'⚠️'},
+  mismatch:{t:'证据表明不符',c:'bad',icon:'❌'}, inconclusive:{t:'无法判定',c:'gray',icon:'❔'},
+}
+let SUITES = []
+let openJobId = null
+let prevDone = new Set()   // 已提醒过的任务
+let refreshTimer = null
+
+// ---------- 初始化 ----------
+async function init() {
+  try {
+    const meta = await (await fetch('/api/meta')).json()
+    SUITES = meta.suites
+    $('#meta-line').textContent = `${meta.tool} · 并发上限 ${meta.maxConcurrent} · 排队 ${meta.queued} · 运行 ${meta.running}`
+    const box = $('#f-suites')
+    box.innerHTML = ''
+    for (const s of SUITES) {
+      const l = document.createElement('label')
+      l.innerHTML = `<input type="checkbox" value="${esc(s.id)}" checked> ${esc(s.title)}`
+      box.appendChild(l)
+    }
+  } catch { $('#meta-line').textContent = '无法连接服务器' }
+  // 恢复开关状态
+  $('#notify-switch').checked = localStorage.getItem('wa-notify') === '1'
+  $('#beep-switch').checked = localStorage.getItem('wa-beep') === '1'
+  $('#notify-switch').addEventListener('change', async (e) => {
+    if (e.target.checked) {
+      localStorage.setItem('wa-notify', '1')
+      if ('Notification' in window && Notification.permission === 'default') {
+        try { await Notification.requestPermission() } catch {}
+      }
+      toast('已开启完成提醒(若浏览器询问通知权限,请允许;预览窗口不支持系统通知时用页面内提醒)')
+    } else localStorage.removeItem('wa-notify')
+  })
+  $('#beep-switch').addEventListener('change', (e) => {
+    e.target.checked ? localStorage.setItem('wa-beep', '1') : localStorage.removeItem('wa-beep')
+    if (e.target.checked) beep()
+  })
+  $('#btn-submit').addEventListener('click', submit)
+  await refresh()
+  scheduleRefresh()
+}
+
+function scheduleRefresh() {
+  clearTimeout(refreshTimer)
+  refreshTimer = setTimeout(refresh, document.hidden ? 10000 : 2500)
+}
+document.addEventListener('visibilitychange', scheduleRefresh)
+
+// ---------- 提交任务 ----------
+async function submit() {
+  const baseUrl = $('#f-baseurl').value.trim()
+  const apiKey = $('#f-apikey').value
+  const model = $('#f-model').value.trim()
+  const budget = $('#f-budget').value
+  const suites = [...document.querySelectorAll('#f-suites input:checked')].map((i) => i.value)
+  const body = {
+    baseUrl, apiKey, model, budget, suites,
+    label: $('#f-label').value.trim(),
+    noExec: $('#f-noexec').checked,
+    webhookUrl: $('#f-webhook').value.trim() || null,
+    refJson: $('#f-refjson').value.trim() || null,
+  }
+  if (!/^https?:\/\//.test(baseUrl)) return toast('⚠️ Base URL 需以 http(s):// 开头')
+  if (!model) return toast('⚠️ 请填写模型 ID')
+  $('#btn-submit').disabled = true
+  $('#submit-hint').textContent = '提交中…'
+  try {
+    const res = await fetch('/api/jobs', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+    const data = await res.json()
+    if (!res.ok) { toast('❌ ' + (data.error ?? '提交失败')); return }
+    toast(`✅ 任务已创建(${data.id}),后台执行中,完成后提醒你`)
+    $('#f-apikey').value = ''
+    $('#f-refjson').value = ''
+    await refresh()
+  } catch (e) {
+    toast('❌ 提交失败: ' + esc(e?.message ?? e))
+  } finally {
+    $('#btn-submit').disabled = false
+    $('#submit-hint').textContent = ''
+  }
+}
+
+// ---------- 刷新与渲染 ----------
+async function refresh() {
+  try {
+    const [jobs, reports, meta] = await Promise.all([
+      fetch('/api/jobs').then((r) => r.json()),
+      fetch('/api/reports').then((r) => r.json()),
+      fetch('/api/meta').then((r) => r.json()).catch(() => null),
+    ])
+    if (meta) $('#meta-line').textContent = `${meta.tool} · 并发上限 ${meta.maxConcurrent} · 排队 ${meta.queued} · 运行 ${meta.running}`
+    renderJobs(jobs)
+    renderReports(reports)
+    checkNotifications(jobs)
+  } catch { /* 网络抖动,下轮再试 */ }
+  scheduleRefresh()
+}
+
+function renderJobs(jobs) {
+  $('#queue-stat').textContent = `${jobs.filter((j) => j.status === 'running').length} 运行 / ${jobs.filter((j) => j.status === 'queued').length} 排队`
+  const box = $('#jobs-box')
+  if (!jobs.length) { box.innerHTML = '<div class="empty">还没有任务 —— 在上方填写端点信息,点「开始检测」</div>'; return }
+  const rows = jobs.map((j) => jobRow(j)).join('')
+  box.innerHTML = `<table>
+    <tr><th style="width:90px">状态</th><th>模型 / 端点</th><th style="width:90px">预算</th><th style="width:130px">创建时间</th><th style="width:110px">耗时</th><th style="width:230px">操作</th></tr>
+    ${rows}</table>${openJobId ? '<div id="job-detail-slot"><div class="empty">加载详情…</div></div>' : ''}`
+  // 绑定按钮
+  box.querySelectorAll('[data-act]').forEach((b) => b.addEventListener('click', () => act(b.dataset.act, b.dataset.id)))
+  if (openJobId) {
+    const j = jobs.find((x) => x.id === openJobId)
+    if (j) {
+      jobDetail(j).then((html) => {
+        const slot = box.querySelector('#job-detail-slot')
+        if (!slot) return
+        slot.innerHTML = html
+        const openLog = slot.querySelector('.log')
+        if (openLog) openLog.scrollTop = openLog.scrollHeight
+      })
+    } else {
+      openJobId = null
+    }
+  }
+}
+
+function jobRow(j) {
+  const st = STATUS[j.status] ?? { t: j.statusText ?? j.status, c: 'gray' }
+  const host = (() => { try { return new URL(j.baseUrl).host } catch { return j.baseUrl } })()
+  const dur = j.durationMs != null ? fmtDur(j.durationMs) : (j.status === 'running' && j.startedAt ? fmtDur(Date.now() - Date.parse(j.startedAt)) : '—')
+  const vs = j.verdict ? VSTATUS[j.verdict.status] : null
+  const actions = []
+  actions.push(`<button class="ghost" data-act="detail" data-id="${j.id}">${openJobId === j.id ? '收起' : '详情'}</button>`)
+  if (j.reportUrl) actions.push(`<a href="${esc(j.reportUrl)}" target="_blank"><button class="ghost">📄 报告</button></a>`)
+  if (j.status === 'running' || j.status === 'queued') actions.push(`<button class="danger ghost" data-act="cancel" data-id="${j.id}">取消</button>`)
+  if (['done', 'failed', 'canceled', 'interrupted'].includes(j.status)) actions.push(`<button class="danger ghost" data-act="remove" data-id="${j.id}">删除</button>`)
+  return `<tr>
+    <td><span class="pill ${st.c}">${st.t}</span>${vs ? `<div style="margin-top:4px"><span class="pill ${vs.c}">${vs.icon} ${vs.t}</span></div>` : ''}</td>
+    <td><b>${esc(j.model)}</b>${j.label ? ` <span class="pill gray">${esc(j.label)}</span>` : ''}<div class="host">${esc(host)} · ${j.hasKey ? '已带 Key' : '无 Key'}${j.hasRef ? ' · 自采参考' : ''}</div></td>
+    <td>${esc(j.budget)}</td>
+    <td>${fmtTime(j.createdAt)}</td>
+    <td>${j.status === 'running' ? '<div class="progress"><i></i></div>' : esc(dur)}</td>
+    <td>${actions.join(' ')}</td>
+  </tr>`
+}
+
+async function jobDetail(j) {
+  if (!j) return ''
+  let logLines = []
+  try {
+    const full = await (await fetch(`/api/jobs/${j.id}`)).json()
+    logLines = full.log ?? []
+  } catch { logLines = [] }
+  const v = j.verdict
+  const suitePills = (j.suites_ ?? []).map((s) => {
+    const vs = VSTATUS[s.status] ?? { t: s.status, c: 'gray' }
+    return `<span class="pill ${vs.c}">${esc(s.title)} ${s.score != null ? s.score : ''}</span>`
+  }).join(' ')
+  return `<div style="margin-top:12px">
+    ${v ? `<div class="verdict-band ${v.c ?? mapVClass(v.status)}">
+      <b>${(VSTATUS[v.status] ?? {}).icon ?? ''} ${esc(v.headline)}</b>
+      ${(v.hardEvidence ?? []).length ? `<div style="margin-top:4px">硬证据:<ul style="margin:4px 0 0 18px;padding:0">${v.hardEvidence.map((h) => `<li>${esc(h)}</li>`).join('')}</ul></div>` : ''}
+      <div class="suite-pills" style="margin-top:8px">${suitePills}</div>
+      ${j.usage ? `<div class="hint">用量: ${j.usage.requests} 次请求 / prompt ${j.usage.promptTokens} tok / completion ${j.usage.completionTokens} tok / 失败 ${j.usage.errors}</div>` : ''}
+      ${j.reportUrl ? `<div style="margin-top:6px"><a href="${esc(j.reportUrl)}" target="_blank">📄 打开完整报告(HTML)</a> · <a href="/reports/${esc(lastSeg(j.reportUrl)).replace('report.html','evidence.jsonl')}" target="_blank">证据 evidence.jsonl</a></div>` : ''}
+    </div>` : ''}
+    ${j.error && !v ? `<div class="verdict-band bad"><b>错误:</b> ${esc(j.error)}</div>` : ''}
+    <div class="hint" style="margin:8px 0 4px">运行日志${j.status === 'running' ? '(实时)' : ''}:</div>
+    <div class="log">${logLines.map((l) => esc(l.line)).join('\n') || '(暂无日志)'}</div>
+  </div>`
+}
+
+function renderReports(reports) {
+  const box = $('#reports-box')
+  if (!reports.length) { box.innerHTML = '<div class="empty">暂无报告 —— 报告生成后自动出现在这里</div>'; return }
+  box.innerHTML = `<table>
+    <tr><th>时间</th><th>模型 / 端点</th><th>判定</th><th style="width:150px">操作</th></tr>
+    ${reports.map((r) => {
+      const v = r.verdict ? VSTATUS[r.verdict.status] ?? { t: r.verdict.status, c: 'gray', icon: '·' } : { t: '无摘要', c: 'gray', icon: '·' }
+      const host = (() => { try { return new URL(r.baseUrl ?? '').host } catch { return r.baseUrl ?? '' } })()
+      return `<tr>
+        <td>${fmtTime(r.generatedAt)}</td>
+        <td><b>${esc(r.model ?? '?')}</b><div class="host">${esc(host)} · ${esc(r.budget ?? '')}</div></td>
+        <td><span class="pill ${v.c}">${v.icon} ${esc(v.t)}</span></td>
+        <td>${r.verdict ? `<a href="/reports/${esc(r.dir)}/report.html" target="_blank"><button class="ghost">📄 HTML 报告</button></a> <a href="/reports/${esc(r.dir)}/report.md" target="_blank"><button class="ghost">MD</button></a>` : '—'}</td>
+      </tr>`
+    }).join('')}</table>`
+}
+
+// ---------- 动作 ----------
+async function act(kind, id) {
+  if (kind === 'detail') {
+    openJobId = openJobId === id ? null : id
+    await refresh(false)
+    return
+  }
+  if (kind === 'cancel') {
+    await fetch(`/api/jobs/${id}/cancel`, { method: 'POST' })
+    toast('已请求取消,将在当前探针结束后停止')
+    await refresh(false)
+    return
+  }
+  if (kind === 'remove') {
+    await fetch(`/api/jobs/${id}`, { method: 'DELETE' })
+    if (openJobId === id) openJobId = null
+    await refresh(false)
+  }
+}
+
+function checkNotifications(jobs) {
+  const finished = jobs.filter((j) => j.status === 'done' || j.status === 'failed')
+  // 首次加载: 把既有任务全部标记为已读,不弹提醒(避免打开页面弹一堆历史通知)
+  if (!checkNotifications._init) {
+    checkNotifications._init = true
+    for (const j of finished) prevDone.add(j.id)
+    return
+  }
+  const newly = finished.filter((j) => !prevDone.has(j.id))
+  for (const j of finished) prevDone.add(j.id)
+  for (const j of newly) {
+    const v = j.verdict ? VSTATUS[j.verdict.status] : null
+    const title = j.status === 'failed' ? `❌ 审计失败 · ${j.model}` : `${v?.icon ?? '📄'} 审计完成 · ${j.model}`
+    const body = j.status === 'failed' ? (j.error ?? '').slice(0, 120) : (j.verdict?.headline ?? '') + (j.reportUrl ? ' —— 点击查看报告' : '')
+    toast(`<b>${title}</b><br>${esc(body)}${j.reportUrl ? `<br><a style="color:#7fb2ff" href="${esc(j.reportUrl)}" target="_blank">打开报告 →</a>` : ''}`, 12000)
+    if ($('#notify-switch').checked && 'Notification' in window && Notification.permission === 'granted') {
+      try {
+        const n = new Notification(title, { body })
+        if (j.reportUrl) n.onclick = () => { window.open(j.reportUrl, '_blank'); n.close() }
+      } catch {}
+    }
+    if ($('#beep-switch').checked) beep()
+  }
+}
+
+// ---------- 工具 ----------
+function toast(html, ms = 6000) {
+  const t = $('#toast')
+  t.innerHTML = html
+  t.classList.add('show')
+  clearTimeout(t._timer)
+  t._timer = setTimeout(() => t.classList.remove('show'), ms)
+}
+function beep() {
+  try {
+    const ctx = new (window.AudioContext ?? window.webkitAudioContext)()
+    const o = ctx.createOscillator(), g = ctx.createGain()
+    o.connect(g); g.connect(ctx.destination)
+    o.frequency.value = 880; g.gain.value = 0.06
+    o.start()
+    o.frequency.setValueAtTime(660, ctx.currentTime + 0.15)
+    o.stop(ctx.currentTime + 0.3)
+    setTimeout(() => ctx.close(), 500)
+  } catch {}
+}
+function fmtTime(iso) {
+  if (!iso) return '—'
+  const d = new Date(iso)
+  return `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
+}
+function fmtDur(ms) {
+  const s = Math.round(ms / 1000)
+  if (s < 60) return s + 's'
+  return Math.floor(s / 60) + 'm' + String(s % 60).padStart(2, '0') + 's'
+}
+function lastSeg(url) { return String(url ?? '').split('/').filter(Boolean).pop() ?? '' }
+function mapVClass(s) { return { consistent: 'ok', suspicious: 'warn', mismatch: 'bad' }[s] ?? '' }
+
+init()
+</script>
+</body>
+</html>

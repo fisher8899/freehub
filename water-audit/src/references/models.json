@@ -1,0 +1,174 @@
+{
+  "note": [
+    "声称模型的官方元数据与公开基准「分数带」。所有数字逐条给出出处与截至日期。",
+    "band 含义: 全真模型在对应探针集上的合理下限/典型区间。由于各公开榜单的评测协议(采样、CoT、判分)与本项目探针集并不相同,band 只用于粗粒度分层判定(达标/边缘/明显偏低),不做精确比较。",
+    "null = 无可靠公开数据或不适用。本项目不做主观估计——宁可留空。"
+  ],
+  "models": {
+    "gpt-4o": {
+      "aliases": ["gpt-4o", "openai/gpt-4o", "gpt-4o-2024-08-06", "gpt-4o-2024-11-20"],
+      "vendor": "openai",
+      "class": "frontier-flagship",
+      "contextTokens": 128000,
+      "knowledgeCutoff": "2023-10",
+      "tokenizer": "o200k_base",
+      "behavioralRefId": "openai/gpt-4o",
+      "bands": {
+        "tierE": { "floor": 0.95, "source": "GSM8K≈96.4/MMLU≈88.7(OpenAI 官方模型卡, 2024-07/11)", "asOf": "2024-11" },
+        "tierM": { "floor": 0.70, "source": "MATH≈76.6, GPQA-Diamond≈53(OpenAI 官方模型卡, 2024-07)", "asOf": "2024-07" },
+        "tierH": { "floor": 0.30, "source": "AIME 类竞赛题单次通过率中位水平(多来源区间 13-67%, 取保守下限)", "asOf": "2024-07" },
+        "tierF": { "floor": 0.70, "source": "前沿旗舰长尾精度综合带(经验值, 无单一官方出处, 仅作弱参考)", "asOf": "2026-09" }
+      }
+    },
+    "gpt-4o-mini": {
+      "aliases": ["gpt-4o-mini", "openai/gpt-4o-mini", "gpt-4o-mini-2024-07-18"],
+      "vendor": "openai",
+      "class": "small",
+      "contextTokens": 128000,
+      "knowledgeCutoff": "2023-10",
+      "tokenizer": "o200k_base",
+      "behavioralRefId": "openai/gpt-4o-mini",
+      "bands": {
+        "tierE": { "floor": 0.90, "source": "MMLU≈82.1(OpenAI 官方模型卡, 2024-07)", "asOf": "2024-07" },
+        "tierM": { "floor": 0.55, "source": "MATH≈70.2 但 GPQA≈40.2, 取跨任务保守下限(OpenAI 模型卡, 2024-07)", "asOf": "2024-07" },
+        "tierH": { "floor": 0.0, "source": "小模型竞赛题无可靠下限, 不作判定", "asOf": "2024-07" },
+        "tierF": { "floor": 0.45, "source": "小模型长尾精度经验带(仅弱参考)", "asOf": "2026-09" }
+      }
+    },
+    "gpt-4.1-mini": {
+      "aliases": ["gpt-4.1-mini", "openai/gpt-4.1-mini", "gpt-4.1-mini-2025-04-14"],
+      "vendor": "openai",
+      "class": "mid",
+      "contextTokens": 1000000,
+      "knowledgeCutoff": "2024-06",
+      "tokenizer": "o200k_base",
+      "behavioralRefId": "openai/gpt-4.1-mini",
+      "bands": {
+        "tierE": { "floor": 0.95, "source": "MMLU≈87+ (OpenAI 4.1 博客, 2025-04)", "asOf": "2025-04" },
+        "tierM": { "floor": 0.60, "source": "GPQA≈50 (OpenAI 4.1 博客, 2025-04)", "asOf": "2025-04" },
+        "tierH": { "floor": 0.15, "source": "AIME 2024≈37-40%(无 CoT 单次)", "asOf": "2025-04" },
+        "tierF": { "floor": 0.55, "source": "中档模型长尾精度经验带(仅弱参考)", "asOf": "2026-09" }
+      }
+    },
+    "deepseek-chat": {
+      "aliases": ["deepseek-chat", "deepseek/deepseek-chat", "deepseek-v3", "deepseek-v3.1", "deepseek-v3.2"],
+      "vendor": "deepseek",
+      "class": "frontier-flagship",
+      "contextTokens": 64000,
+      "knowledgeCutoff": "2024-07 (V3.1 官方说明)",
+      "tokenizer": null,
+      "behavioralRefId": "deepseek/deepseek-chat",
+      "bands": {
+        "tierE": { "floor": 0.95, "source": "MMLU≈88.5 (DeepSeek-V3 技术报告, 2024-12)", "asOf": "2024-12" },
+        "tierM": { "floor": 0.70, "source": "MATH-500≈90.2, GPQA-Diamond≈59.1 (V3 技术报告, 2024-12)", "asOf": "2024-12" },
+        "tierH": { "floor": 0.30, "source": "AIME 2024≈39.2 (V3 技术报告, 2024-12)", "asOf": "2024-12" },
+        "tierF": { "floor": 0.70, "source": "前沿旗舰长尾精度综合带(经验值, 仅弱参考)", "asOf": "2026-09" }
+      }
+    },
+    "claude-sonnet-4.5": {
+      "aliases": ["claude-sonnet-4-5", "claude-sonnet-4.5", "claude-sonnet-4-5-20250929", "anthropic/claude-sonnet-4.5"],
+      "vendor": "anthropic",
+      "class": "frontier-flagship",
+      "contextTokens": 200000,
+      "knowledgeCutoff": "2025-07 (Anthropic 官方文档)",
+      "tokenizer": null,
+      "behavioralRefId": "anthropic/claude-sonnet-4.5",
+      "bands": {
+        "tierE": { "floor": 0.95, "source": "MMLU 类基准接近饱和(Anthropic 官方发布, 2025-09)", "asOf": "2025-09" },
+        "tierM": { "floor": 0.75, "source": "GPQA-Diamond≈83 (Anthropic 官方发布, 2025-09)", "asOf": "2025-09" },
+        "tierH": { "floor": 0.60, "source": "AIME 2025≈87(含思考) / 60+(不含)", "asOf": "2025-09" },
+        "tierF": { "floor": 0.75, "source": "前沿旗舰长尾精度综合带(经验值, 仅弱参考)", "asOf": "2026-09" }
+      }
+    },
+    "gemini-2.5-flash": {
+      "aliases": ["gemini-2.5-flash", "google/gemini-2.5-flash"],
+      "vendor": "google",
+      "class": "mid",
+      "contextTokens": 1048576,
+      "knowledgeCutoff": "2025-01 (Google 官方文档)",
+      "tokenizer": null,
+      "behavioralRefId": "google/gemini-2.5-flash",
+      "bands": {
+        "tierE": { "floor": 0.90, "source": null, "asOf": "2025-06" },
+        "tierM": { "floor": 0.55, "source": "GPQA-Diamond≈60-78(含思考模式差异大, 取保守下限)", "asOf": "2025-06" },
+        "tierH": { "floor": 0.20, "source": "AIME 2025 单次通过率(含思考)", "asOf": "2025-06" },
+        "tierF": { "floor": 0.50, "source": "中档模型长尾精度经验带(仅弱参考)", "asOf": "2026-09" }
+      }
+    },
+    "kimi-k2": {
+      "aliases": ["kimi-k2", "kimi-k2-instruct", "moonshotai/kimi-k2", "kimi-k2-0905-preview"],
+      "vendor": "moonshot",
+      "class": "frontier-flagship",
+      "contextTokens": 131072,
+      "knowledgeCutoff": null,
+      "tokenizer": null,
+      "behavioralRefId": "moonshotai/kimi-k2",
+      "bands": {
+        "tierE": { "floor": 0.90, "source": "MMLU≈89.5 (Kimi-K2 技术报告, 2025-07)", "asOf": "2025-07" },
+        "tierM": { "floor": 0.60, "source": "GPQA-Diamond≈57-75 (K2 技术报告, 2025-07)", "asOf": "2025-07" },
+        "tierH": { "floor": 0.30, "source": "AIME 2025≈49.5 (K2 技术报告, 2025-07)", "asOf": "2025-07" },
+        "tierF": { "floor": 0.65, "source": "长尾精度经验带(仅弱参考)", "asOf": "2026-09" }
+      }
+    },
+    "glm-4.5": {
+      "aliases": ["glm-4.5", "z-ai/glm-4.5", "glm-4.5-air", "glm-4.6"],
+      "vendor": "zhipu",
+      "class": "mid",
+      "contextTokens": 131072,
+      "knowledgeCutoff": null,
+      "tokenizer": null,
+      "behavioralRefId": "z-ai/glm-4.5",
+      "bands": {
+        "tierE": { "floor": 0.90, "source": "MMLU-Pro≈84.6 (GLM-4.5 技术报告, 2025-07)", "asOf": "2025-07" },
+        "tierM": { "floor": 0.55, "source": "GPQA-Diamond≈79 但含思考模式, 保守下限", "asOf": "2025-07" },
+        "tierH": { "floor": 0.25, "source": "AIME24≈70-90(含思考), 保守下限", "asOf": "2025-07" },
+        "tierF": { "floor": 0.50, "source": "长尾精度经验带(仅弱参考)", "asOf": "2026-09" }
+      }
+    },
+    "qwen3-30b-a3b-instruct-2507": {
+      "aliases": ["qwen3-30b-a3b-instruct-2507", "qwen/qwen3-30b-a3b-instruct-2507", "qwen3-30b-a3b"],
+      "vendor": "alibaba",
+      "class": "mid",
+      "contextTokens": 262144,
+      "knowledgeCutoff": null,
+      "tokenizer": null,
+      "behavioralRefId": "qwen/qwen3-30b-a3b-instruct-2507",
+      "bands": {
+        "tierE": { "floor": 0.90, "source": "MMLU≈85+ (Qwen3-2507 官方博客, 2025-07)", "asOf": "2025-07" },
+        "tierM": { "floor": 0.55, "source": "GPQA≈70(官方, 非思考模式约 54), 保守下限", "asOf": "2025-07" },
+        "tierH": { "floor": 0.50, "source": "AIME25≈61.3 (官方博客, 2025-07)", "asOf": "2025-07" },
+        "tierF": { "floor": 0.50, "source": "长尾精度经验带(仅弱参考)", "asOf": "2026-09" }
+      }
+    },
+    "llama-3.1-8b-instruct": {
+      "aliases": ["llama-3.1-8b-instruct", "meta-llama/llama-3.1-8b-instruct", "meta-llama/Llama-3.1-8B-Instruct"],
+      "vendor": "meta",
+      "class": "small",
+      "contextTokens": 131072,
+      "knowledgeCutoff": "2023-12",
+      "tokenizer": "llama3",
+      "behavioralRefId": "meta-llama/llama-3.1-8b-instruct",
+      "bands": {
+        "tierE": { "floor": 0.75, "source": "MMLU≈69 (Meta 官方模型卡, 2024-07)", "asOf": "2024-07" },
+        "tierM": { "floor": 0.30, "source": "MATH≈20-28, GPQA≈32 (Meta 官方模型卡, 2024-07)", "asOf": "2024-07" },
+        "tierH": { "floor": 0.0, "source": "小模型竞赛题无可靠下限, 不作判定", "asOf": "2024-07" },
+        "tierF": { "floor": 0.25, "source": "小模型长尾精度经验带(仅弱参考)", "asOf": "2026-09" }
+      }
+    },
+    "mistral-small-3.2": {
+      "aliases": ["mistral-small-3.2-24b-instruct", "mistralai/mistral-small-3.2-24b-instruct", "mistral-small-24b"],
+      "vendor": "mistral",
+      "class": "small",
+      "contextTokens": 131072,
+      "knowledgeCutoff": null,
+      "tokenizer": null,
+      "behavioralRefId": "mistralai/mistral-small-3.2-24b-instruct",
+      "bands": {
+        "tierE": { "floor": 0.80, "source": "MMLU≈69-81 (Mistral 官方发布, 2025-06)", "asOf": "2025-06" },
+        "tierM": { "floor": 0.35, "source": "数学/GPQA 中档水平, 保守下限", "asOf": "2025-06" },
+        "tierH": { "floor": 0.0, "source": "无可靠下限, 不作判定", "asOf": "2025-06" },
+        "tierF": { "floor": 0.30, "source": "小模型长尾精度经验带(仅弱参考)", "asOf": "2026-09" }
+      }
+    }
+  }
+}

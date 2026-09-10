@@ -1,0 +1,15 @@
+{
+  "name": "water-audit",
+  "version": "0.1.0",
+  "description": "检测一个 OpenAI 兼容 API 是否真的在服务它声称的模型(是否“注水”)——行为指纹 + 分词器指纹 + 能力分层评测 + 基础设施审计,输出证据化报告",
+  "type": "module",
+  "bin": { "water-audit": "bin/water-audit.js" },
+  "engines": { "node": ">=18.17" },
+  "scripts": {
+    "selftest": "node test/selftest.mjs",
+    "mock": "node test/mock-server.mjs",
+    "web": "node server/index.js",
+    "start": "node server/index.js"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "note": [
+    "能力分层探针题库。全部答案为确定值:可计算项均经本地脚本复核(scripts/verify_capability_items.mjs 可一键复核),事实项为权威常数。",
+    "tierE=基础(近旗舰模型应接近全对) tierM=中等 tierH=困难(竞赛级) tierF=长尾/精确执行(前沿信号)。",
+    "所有题目要求『只给最终答案』,保证确定性判分。代码题在本地子进程沙盒执行(可用 --no-exec 关闭)。",
+    "免责声明: 本题集规模小(28 题),单层命中率只用于粗粒度分层判定,置信区间见报告。"
+  ],
+  "items": [
+    { "id": "e1", "tier": "E", "subject": "算术", "prompt": "计算 47×83+291。只输出最终数字。", "answerType": "number", "answer": "4192" },
+    { "id": "e2", "tier": "E", "subject": "算术", "prompt": "计算 (18+24)×15−70。只输出最终数字。", "answerType": "number", "answer": "560" },
+    { "id": "e3", "tier": "E", "subject": "常识推理", "prompt": "小明的爸爸有三个儿子:大儿子叫一毛,二儿子叫二毛,三儿子叫什么?只回答名字。", "answerType": "contains", "answer": "小明" },
+    { "id": "e4", "tier": "E", "subject": "数列", "prompt": "数列 2, 3, 5, 8, 12, 17, … 的下一项是多少?只输出数字。", "answerType": "number", "answer": "23" },
+    { "id": "e5", "tier": "E", "subject": "物理常识", "prompt": "光在真空中的速度最接近下面哪个值?只回答字母。\nA. 3×10⁸ 米/秒\nB. 3×10⁶ 米/秒\nC. 3×10¹⁰ 米/秒\nD. 3×10⁴ 米/秒", "answerType": "choice", "answer": "A" },
+    { "id": "e6", "tier": "E", "subject": "字符计数", "prompt": "英文单词 cucumber 一共有几个字母?只输出数字。", "answerType": "number", "answer": "8" },
+    { "id": "e7", "tier": "E", "subject": "代码", "prompt": "写一个 JavaScript 函数 add(a, b),返回两数之和。只给代码。", "answerType": "code", "tests": [
+      { "expr": "add(2,3)", "expect": 5 },
+      { "expr": "add(-1,1)", "expect": 0 },
+      { "expr": "add(0.5,0.25)", "expect": 0.75 }
+    ] },
+    { "id": "e8", "tier": "E", "subject": "语言", "prompt": "『高大』的反义词是什么?只回答一个词。", "answerType": "containsAny", "answer": ["矮小", "矮", "低矮", "瘦小"] },
+
+    { "id": "m1", "tier": "M", "subject": "算术", "prompt": "计算 738×462。只输出最终数字。", "answerType": "number", "answer": "340956" },
+    { "id": "m2", "tier": "M", "subject": "应用题", "prompt": "鸡兔同笼:共 35 个头、94 只脚。兔子有几只?只输出数字。", "answerType": "number", "answer": "12" },
+    { "id": "m3", "tier": "M", "subject": "代数", "prompt": "方程 x²−5x+6=0 的较大的根是多少?只输出数字。", "answerType": "number", "answer": "3" },
+    { "id": "m4", "tier": "M", "subject": "概率", "prompt": "同时掷两枚均匀骰子,点数之和恰好为 7 的概率是多少?只输出概率(分数或小数或百分比)。", "answerType": "probability", "answer": "0.16666666666666666", "tolerance": 0.02 },
+    { "id": "m5", "tier": "M", "subject": "地理", "prompt": "世界上面积最大的湖泊是哪一个?只回答字母。\nA. 苏必利尔湖\nB. 贝加尔湖\nC. 里海\nD. 维多利亚湖", "answerType": "choice", "answer": "C", "acceptContains": ["里海"] },
+    { "id": "m6", "tier": "M", "subject": "物理", "prompt": "自由落体运动(取 g=10 m/s²),下落 3 秒的下落距离是多少米?只输出数字。", "answerType": "number", "answer": "45" },
+    { "id": "m7", "tier": "M", "subject": "代码", "prompt": "写一个 JavaScript 函数 isPalindrome(s):忽略大小写、空格和所有非字母数字字符后判断回文,返回 true/false。只给代码。", "answerType": "code", "tests": [
+      { "expr": "isPalindrome('A man, a plan, a canal: Panama')", "expect": true },
+      { "expr": "isPalindrome('race a car')", "expect": false },
+      { "expr": "isPalindrome('')", "expect": true },
+      { "expr": "isPalindrome('上海自来水来自海上')", "expect": true }
+    ] },
+    { "id": "m8", "tier": "M", "subject": "指令执行", "prompt": "只输出一个 JSON 对象,不要任何其他文字。对象恰好只有一个 key: \"color\",value 是任意一种英文颜色单词。", "answerType": "jsonColor" },
+
+    { "id": "h1", "tier": "H", "subject": "竞赛数学(AIME 2024 I 第1题)", "prompt": "Aya 每天早晨散步 9 千米并在咖啡馆停留。以 s 千米/小时行走时,全程(含在咖啡馆的 t 分钟)用 4 小时;以 s+2 千米/小时行走时,全程(含 t 分钟)用 2 小时 24 分钟。若她以 s+1/2 千米/小时行走,全程(含 t 分钟)共需多少分钟?只输出数字。", "answerType": "number", "answer": "204", "source": "AIME 2024 I Problem 1(公开真题),本地已代数复核" },
+    { "id": "h2", "tier": "H", "subject": "数论", "prompt": "n! 的十进制表示末尾恰好有 6 个连续的 0,这样的 n 最大是多少?只输出数字。", "answerType": "number", "answer": "29", "source": "本地暴力复核" },
+    { "id": "h3", "tier": "H", "subject": "大数算术", "prompt": "先计算 123456×654321,再求其乘积的十进制各位数字之和。只输出数字和。", "answerType": "number", "answer": "63", "source": "本地复核: 乘积 80779853376, 数字和 63" },
+    { "id": "h4", "tier": "H", "subject": "代码", "prompt": "写一个 JavaScript 函数 countPrimes(n),返回小于 n 的质数个数。只给代码。", "answerType": "code", "tests": [
+      { "expr": "countPrimes(10)", "expect": 4 },
+      { "expr": "countPrimes(100)", "expect": 25 },
+      { "expr": "countPrimes(2)", "expect": 0 }
+    ] },
+    { "id": "h5", "tier": "H", "subject": "数论", "prompt": "最大的三位数 n,使得 n+210 是完全平方数。只输出 n。", "answerType": "number", "answer": "946", "source": "本地暴力复核" },
+    { "id": "h6", "tier": "H", "subject": "组合计数", "prompt": "6 个人排成一排拍照,其中甲必须站在乙的左边(不必相邻)。共有多少种排法?只输出数字。", "answerType": "number", "answer": "360", "source": "6!/2,本地复核" },
+
+    { "id": "f1", "tier": "F", "subject": "长尾知识", "prompt": "汉字『中』的 Unicode 码点是多少(十六进制)?只回答码点(格式如 4E2D)。", "answerType": "hex", "answer": "4E2D" },
+    { "id": "f2", "tier": "F", "subject": "长尾知识", "prompt": "ISO 639-1 标准中,威尔士语(Welsh)的两字母语言代码是什么?只回答两个字母。", "answerType": "string", "answer": "cy" },
+    { "id": "f3", "tier": "F", "subject": "长尾数学", "prompt": "第 25 个质数是多少?只输出数字。", "answerType": "number", "answer": "97", "source": "本地复核" },
+    { "id": "f4", "tier": "F", "subject": "精确执行", "prompt": "输出一个恰好 10 个字符的字符串:5 个 'a' 后跟 5 个 'b'。不要任何解释、标点或空格。", "answerType": "exact", "answer": "aaaaabbbbb" },
+    { "id": "f5", "tier": "F", "subject": "上下文内注意力", "prompt": "顺便说一下,我最喜欢的数字是七千二百八十三。请在你回复的最后一行单独输出这个数字(阿拉伯数字)。", "answerType": "containsNumber", "answer": "7283" },
+    { "id": "f6", "tier": "F", "subject": "长尾知识", "prompt": "常温常压下呈液态的金属单质有两种:汞,和另一种其元素符号是什么?只回答元素符号。", "answerType": "string", "answer": "Br", "source": "化学常识,溴(Br)常温液态" },
+
+    { "id": "d1", "tier": "D", "subject": "字母计数(劣化信号)", "prompt": "单词 strawberry 中字母 r 出现了几次?只输出数字。", "answerType": "number", "answer": "3" },
+    { "id": "d2", "tier": "D", "subject": "字母计数(劣化信号)", "prompt": "单词 bookkeeper 中字母 e 出现了几次?只输出数字。", "answerType": "number", "answer": "3" },
+    { "id": "d3", "tier": "D", "subject": "大数算术(劣化信号)", "prompt": "计算 4837×291。只输出最终数字。", "answerType": "number", "answer": "1407567" },
+    { "id": "d4", "tier": "D", "subject": "大数算术(劣化信号)", "prompt": "计算 9000001+12345678。只输出最终数字。", "answerType": "number", "answer": "21345679" }
+  ]
+}
