@@ -93,6 +93,10 @@ water-audit/     模型注水检测器（独立子项目，见 water-audit/READM
 形态），输出证据化 HTML/Markdown 报告，全部判定有数据与出处，查不到证据的如实写「无法确认」。
 
 ```bash
+# Web 控制台（推荐）：网页填 Base URL / API Key / 模型 ID，后台执行，完成后提醒
+node water-audit/server/index.js        # → http://localhost:8620
+
+# 或纯命令行
 node water-audit/bin/water-audit.js --base-url https://api.example.com/v1 \
      --api-key sk-xxx --model gpt-4o
 ```

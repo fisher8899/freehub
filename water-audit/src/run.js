@@ -82,6 +82,7 @@ export async function runAudit(opts) {
 
   const results = []
   for (const id of suites) {
+    if (opts.signal?.aborted) break // 取消: 在探针边界生效
     const [title, fn] = probeMap[id]
     if (!fn) continue
     log(`▶ ${title}`)

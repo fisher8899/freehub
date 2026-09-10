@@ -72,11 +72,12 @@ export class OpenAiClient {
   url(path) { return `${this.baseUrl}${path}` }
 
   headers(extra = {}) {
-    return {
+    const h = {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${this.apiKey}`,
       ...extra,
     }
+    if (this.apiKey) h.Authorization = `Bearer ${this.apiKey}`
+    return h
   }
 
   /**

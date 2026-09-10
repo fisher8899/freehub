@@ -12,6 +12,27 @@ node bin/water-audit.js --base-url https://api.example.com/v1 \
 零 npm 依赖(Node ≥ 18.17),报告输出到 `reports/<时间>-<模型>/`:
 `report.html`(自包含,可直接发人)/ `report.md` / `evidence.jsonl`(全部原始交互)/ `summary.json`。
 
+## Web 控制台(推荐)
+
+不想敲命令行?启动 Web 控制台,在网页上填 Base URL / API Key / 模型 ID 即可:
+
+```bash
+node server/index.js        # 默认 0.0.0.0:8620,可用 WATER_AUDIT_PORT 改端口
+# 或 npm run web
+```
+
+打开 `http://localhost:8620`:
+
+- **提交即走**: 任务进入服务器后台队列执行(默认并发 2,可 `WATER_AUDIT_MAX_CONCURRENT` 调整),
+  关掉浏览器也在跑;
+- **完成后提醒**: 勾选「完成后提醒我」→ 浏览器系统通知 + 页面内弹窗,可选提示音;
+  也可填 Webhook URL,完成时服务器 POST 结果 JSON 到你的地址;
+- **实时日志**: 「详情」里可看每个探针的执行进度,可中途取消;
+- **报告在线看**: 完成后在「报告库」直接打开 HTML/Markdown 报告与 evidence.jsonl;
+- **自采参考**: 把 `enroll` 产出的参考 JSON 粘进高级选项,即走同协议严格比对(金标准);
+- **Key 安全**: API Key 只保存在服务器内存,不落盘、不进日志与报告;任务历史持久化在
+  `data/jobs.json`(不含任何密钥)。请勿将 8620 端口直接暴露公网,需要时加反向代理鉴权。
+
 ---
 
 ## 一、它能检测哪些"注水"形态

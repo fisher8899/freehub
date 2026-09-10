@@ -7,7 +7,9 @@
   "engines": { "node": ">=18.17" },
   "scripts": {
     "selftest": "node test/selftest.mjs",
-    "mock": "node test/mock-server.mjs"
+    "mock": "node test/mock-server.mjs",
+    "web": "node server/index.js",
+    "start": "node server/index.js"
   },
   "license": "MIT"
 }
