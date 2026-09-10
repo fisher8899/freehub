@@ -127,6 +127,18 @@ node scripts/verify_capability_items.mjs   # 复核题库全部可计算答案
 python scripts/gen_tokenizer_refs.py --npm-dir <gpt-tokenizer解压目录>  # 重建分词器参考表
 ```
 
+**补全国产模型分词器参考**(qwen/deepseek/glm/gemma,基础环境访问不到官方词表,建议在本地做):
+
+```bash
+pip install tokenizers
+python scripts/gen_tokenizer_refs_extra.py --preset qwen2.5      # 或 qwen3 / deepseek-v3 / glm-4 / gemma-2
+python scripts/gen_tokenizer_refs_extra.py --preset qwen2.5 --hf-endpoint https://hf-mirror.com  # 镜像
+python scripts/gen_tokenizer_refs_extra.py --local tokenizer.json --name qwen2.5 --family qwen   # 离线(浏览器下载好文件)
+```
+
+生成的参考合并进 `src/references/tokenizer-counts.json`,water-audit 下次运行自动使用;
+声称模型不在已收录词表里时,分词器维度只做"最像哪个"的报告,不发硬判定。
+
 `test/selftest.mjs` 会自动起两个 mock:一个"真装 gpt-4o"(o200k 词表 + gpt-4o 行为参考),
 一个"声称 gpt-4o 实为 mini"(cl100k 词表 + mini 行为 + 弱能力),断言审计方向正确。
 `test/mock-server.mjs --mode cacher` 模拟网关缓存重放,验证缓存检测。
