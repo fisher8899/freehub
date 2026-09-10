@@ -82,7 +82,23 @@ server/
   sources/       freeegg / rss / github 采集器
 web/             前端（原生 JS 零依赖）
 data/            config.json（源配置）+ freehub.db（数据）
+water-audit/     模型注水检测器（独立子项目，见 water-audit/README.md）
 ```
+
+## water-audit · 模型注水检测器
+
+免费/低价 API 常见坑：声称 `gpt-4o` 实为 mini、量化劣化、砍上下文、网关缓存重放。
+`water-audit/` 对任意 OpenAI 兼容端点做 7 维取证审计（单 token 行为指纹 arXiv:2607.10252、
+分词器指纹、能力分层对照公开分数带、长上下文暗号、缓存/确定性、身份与知识截止、基础设施
+形态），输出证据化 HTML/Markdown 报告，全部判定有数据与出处，查不到证据的如实写「无法确认」。
+
+```bash
+node water-audit/bin/water-audit.js --base-url https://api.example.com/v1 \
+     --api-key sk-xxx --model gpt-4o
+```
+
+零依赖（Node ≥ 18.17），自测：`cd water-audit && npm run selftest`。方法、判定规则与
+诚实声明见 **[water-audit/README.md](water-audit/README.md)**。
 
 ## 说明
 
